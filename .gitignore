@@ -1,0 +1,6 @@
+*.user
+global.h
+build/
+*.o
+moc_*
+ui_*
