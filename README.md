@@ -5,7 +5,7 @@ A simple program for 1d and 2d visualization of fieldstrength vs. coordinate dat
 A program which allows the selection of the following fields from an ASCII data file for visualization:
 - date+time
 - measurement value (fieldstrength)
-- x-ccordinate (i.e. RA or Az)
+- x-coordinate (i.e. RA or Az)
 - y-coordinate (i.e. Dec or Alt)
 - reference switch indicator (a bit indicating whether the sky signal is measured or the receiver's noise)
 
