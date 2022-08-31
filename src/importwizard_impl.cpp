@@ -61,6 +61,23 @@ ImportWizard::ImportWizard(QWidget *parent)
    fVerbose=0;
 }
 
+void ImportWizard::reset() {
+    clearData();
+    fFilename = "";
+    tabWidget->setCurrentIndex(0);
+    tabWidget->setTabEnabled(0,true);
+    tabWidget->setTabEnabled(1,false);
+    fOldSize = 0;
+    fChanged = false;
+    continueButton->setEnabled(false);
+    finishButton->setEnabled(false);
+    filenameEdit->setText("");
+    fileSizeLabel->setText("");
+    fileCreatedLabel->setText("");
+    fileModifiedLabel->setText("");
+    fileOwnerLabel->setText("");
+};
+
 void ImportWizard::assignFile()
 {
    QString s=QFileDialog::getOpenFileName(

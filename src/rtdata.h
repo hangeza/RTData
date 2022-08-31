@@ -22,6 +22,11 @@
 
 #include <QCloseEvent>
 #include <vector>
+#include <memory>
+
+#include "importwizard_impl.h"
+#include "RenderArea.h"
+
 class QAction;
 class QMenu;
 class QCanvasView;
@@ -30,8 +35,8 @@ class QActionGroup;
 class QLabel;
 class QMenu;
 class ImportWizard;
-class Histo2dWidget;
-class DiagramWidget;
+//class Histo2dWidget;
+//class DiagramWidget;
 class DataItem;
 class RawWindow;
 class QTableWidget;
@@ -61,9 +66,7 @@ public:
       void closeEvent(QCloseEvent *event);
 
    public slots:
-      void clear();
       void about();
-      void draw();
       void plot1d();
       void plot2d();
       void replot();
@@ -84,39 +87,37 @@ public:
       void calcLinRegression(const std::vector<double>& xvals, const std::vector<double>& yvals, double* slope, double* offset);
 
 
-      Histo2dWidget* mapwindow;
-      DiagramWidget* diagramwindow;
-      ImportWizard* fImportwizard;
-      //QVector<DataItem*> fDataVector;
-      int fVerbose;
-      //ImageView* imview;
+      std::unique_ptr<Histo2dWidget> mapwindow;
+      std::unique_ptr<DiagramWidget> diagramwindow;
+      std::unique_ptr<ImportWizard> importwizard;
+      int fVerbose { 0 };
 
-      QTableWidget* tabWidget;
-      QTextEdit* statusBox;
-      QComboBox* plotColumnSelectComboBox;
-      QGroupBox* valueRadioGroup;
-      QRadioButton* valueRadioButton;
-      QRadioButton* refRadioButton;
-      QRadioButton* diffRadioButton;
-      QSpinBox* refIntervalSpinBox;
-      QGridLayout* layout;
-      QPushButton* button1;
-      QPushButton* button2;
-      QMenu *fileMenu;
-      QMenu *editMenu;
-      QMenu *helpMenu;
-      QToolBar *fileToolBar;
-      QToolBar *editToolBar;
-      QAction *newAct;
-      QAction *openAct;
-      QAction *saveAct;
-      QAction *saveAsAct;
-      QAction *exitAct;
-      QAction *cutAct;
-      QAction *copyAct;
-      QAction *pasteAct;
-      QAction *aboutAct;
-      QAction *aboutQtAct;
+      QTableWidget* tabWidget { nullptr };
+      QTextEdit* statusBox { nullptr };
+      QComboBox* plotColumnSelectComboBox { nullptr };
+      QGroupBox* valueRadioGroup { nullptr };
+      QRadioButton* valueRadioButton { nullptr };
+      QRadioButton* refRadioButton { nullptr };
+      QRadioButton* diffRadioButton { nullptr };
+      QSpinBox* refIntervalSpinBox { nullptr };
+      QGridLayout* layout { nullptr };
+      QPushButton* button1 { nullptr };
+      QPushButton* button2 { nullptr };
+      QMenu *fileMenu { nullptr };
+      QMenu *editMenu { nullptr };
+      QMenu *helpMenu { nullptr };
+      QToolBar *fileToolBar { nullptr };
+      QToolBar *editToolBar { nullptr };
+      QAction *newAct { nullptr };
+      QAction *openAct { nullptr };
+      QAction *saveAct { nullptr };
+      QAction *saveAsAct { nullptr };
+      QAction *exitAct { nullptr };
+      QAction *cutAct { nullptr };
+      QAction *copyAct { nullptr };
+      QAction *pasteAct { nullptr };
+      QAction *aboutAct { nullptr };
+      QAction *aboutQtAct { nullptr };
 
 private:
     Ui::RTData *ui;

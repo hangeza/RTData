@@ -78,18 +78,19 @@ class DataItem {
       double* fZ;
 };
 
-
-
 class ImportWizard: public QDialog, private Ui::importDialog {
 Q_OBJECT
-   public:
-      ImportWizard(QWidget *parent = 0);
-	   ~ImportWizard();
-	   const QVector< DataItem* >& dataVector() { return fDataVector; fChanged=false; }
-      const QVector< DataItem* >& refVector() { return fRefVector; fChanged=false; }
-      const QString& filename() const { return fFilename; }
-      bool fileChanged() const { return fChanged; }
-   private slots:
+public:
+    ImportWizard(QWidget *parent = 0);
+    ~ImportWizard();
+    const QVector< DataItem* >& dataVector() { return fDataVector; fChanged=false; }
+    const QVector< DataItem* >& refVector() { return fRefVector; fChanged=false; }
+    const QString& filename() const { return fFilename; }
+    bool fileChanged() const { return fChanged; }
+public slots:
+    void reset();
+
+private slots:
       void assignFile();
       void validateFile(const QString& filename);
       void readRawData();
@@ -98,10 +99,11 @@ Q_OBJECT
       void reloadData();
    signals:
       void dataChanged();
-   private: // private methods
+private: 
+// private methods
       void clearData();
       QMap<int,int> getColStat(const QString& filename);
-   private: // private fields
+// private fields
       int fVerbose;
       QString fFilename;
       std::ifstream fFile;
