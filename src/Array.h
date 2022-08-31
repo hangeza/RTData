@@ -821,30 +821,18 @@ public:
    /*! Copy Constructor \n
     *  make deep copy of \e src
     */
-   Array(const Array& src)
+   Array(const Array& src) : Array_base<T>()
    {
-//      if (this == &src) return;
+        assert(this->resize(src.NrElements()));
+        _isReference=false;
+        _extends=src._extends;
+        _bases=src._bases;
+        _strides=src._strides;
 
-      if (_size!=src._size)
-      {
-/*
-         delete[] _mem;
-         _size=src._size;
-         if (_size) _mem=new T[_size];
-*/
-         assert(this->resize(src.NrElements()));
-         _isReference=false;
-      }
-
-      _extends=src._extends;
-      _bases=src._bases;
-      _strides=src._strides;
-
-      std::copy(src.begin(),src.end(),this->begin());
-//      memcpy(_mem,src._mem,sizeof(T)*_size);
+        std::copy(src.begin(),src.end(),this->begin());
    }
 
-   /*! default destructor
+   /*! destructor
     */
    ~Array(){}
 

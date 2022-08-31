@@ -26,26 +26,10 @@
 #include <QMenuBar>
 #include <QStatusBar>
 
-#include "func.h"
-
-/* RTData::RTData(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::RTData)
-{
-    ui->setupUi(this);
-}
-
-RTData::~RTData()
-{
-    delete ui;
-} */
-
 using namespace std;
 
-RTData::RTData(QWidget *parent)
+RTData::RTData([[maybe_unused]] QWidget *parent)
 {
-//   datawidget = new RTDataWidget;
-//   setCentralWidget(datawidget);
 
     importwizard = std::make_unique<ImportWizard>(this);
 
@@ -62,8 +46,6 @@ RTData::RTData(QWidget *parent)
    mapwindow = std::make_unique<Histo2dWidget>();
    diagramwindow = std::make_unique<DiagramWidget>();
    importwizard->hide();
-//   diagramwindow->setBgColor(Qt::white);
-   //diagramwindow->show();
 
    statusBox = new QTextEdit(this);
    statusBox->setMaximumHeight(100);
@@ -370,13 +352,13 @@ double RTData::getInterpolRef(const QVector< DataItem* >& refvector, const QDate
 
 void RTData::calcLinRegression(const vector<double>& xvals, const vector<double>& yvals, double* slope, double* offset)
 {
-   int n=xvals.size();
+   std::size_t n=xvals.size();
    if (yvals.size()!=n) return;
    double sumx=0.;
    double sumy=0.;
    double sumxx=0.;
    double sumxy=0.;
-   for (int i=0; i<n; i++) {
+   for (std::size_t i=0; i<n; i++) {
       sumx+=xvals[i];
       sumy+=yvals[i];
       sumxx+=xvals[i]*xvals[i];
@@ -452,17 +434,20 @@ void RTData::plot1d()
    double ymin=1e+38;
    double ymax=-1e+38;
    if (fVerbose>2) std::cout<<"fImportwizard->dataVector().size()="<<importwizard->dataVector().size()<<std::endl;
-   int N=0;
-   if (importwizard->refVector().size() && refRadioButton->isChecked()) N=importwizard->refVector().size();
-   else N=importwizard->dataVector().size();
+   std::size_t N { 0 };
+   if (importwizard->refVector().size() && refRadioButton->isChecked()) {
+       N = importwizard->refVector().size();
+   } else {
+       N = importwizard->dataVector().size();
+   }
 
    data.reserve(N);
-   for (int i=0; i<N; i++) {
-      QPointF point;
+   for (std::size_t i { 0 }; i < N; i++) {
+      QPointF point {};
       if (fVerbose>2) std::cout<<"fImportwizard->dataVector()[i]="<<hex<<(importwizard->dataVector()[i])<<std::endl;
       if (fVerbose>2) std::cout<<"fImportwizard->dataVector()[i]->z()="<<hex<<(importwizard->dataVector()[i]->z())<<std::endl;
       if (fVerbose>3) std::cout<<"*fImportwizard->dataVector()[i]->z()="<<*(importwizard->dataVector()[i]->z())<<std::endl;
-      double z;
+      double z { 0 };
       if (!importwizard->refVector().size() || valueRadioButton->isChecked())
       {
          z=*(importwizard->dataVector()[i]->z());
@@ -509,43 +494,39 @@ void RTData::plot1d()
 
 void RTData::plot2d()
 {
-   if (!importwizard->dataVector().size()) return;
-   if (fVerbose>1) std::cout<<"*** plot2d()"<<std::endl;
-   QVector<QPoint3F> data;
-   if (importwizard->refVector().size() && refRadioButton->isChecked())
-   {
-      data.reserve(importwizard->refVector().size());
-      for (int i=0; i<importwizard->refVector().size(); i++) {
-         if (importwizard->refVector()[i]->x() && importwizard->refVector()[i]->y() && importwizard->refVector()[i]->z()) {
-            double z=*(importwizard->refVector()[i]->z());
-            data.push_back(QPoint3F(*(importwizard->refVector()[i]->x()), *(importwizard->refVector()[i]->y()), z));
-         }
-      }
-   } else {
-      data.reserve(importwizard->dataVector().size());
-      for (int i=0; i<importwizard->dataVector().size(); i++) {
-	// file>>dp.Ra>>dp.Dec>>dp.Value>>dummy>>dummy>>dummy>>dummy;
-         if (importwizard->dataVector()[i]->x() && importwizard->dataVector()[i]->y() && importwizard->dataVector()[i]->z()) {
-            double z;
-	    if (!importwizard->refVector().size() || valueRadioButton->isChecked())
-	    {
-	       z=*(importwizard->dataVector()[i]->z());
-	    } else
-        if (importwizard->refVector().size() && diffRadioButton->isChecked() && importwizard->dataVector()[i]->dateTime())
-        {
-	       z=*(importwizard->dataVector()[i]->z());
-	       z-=getlinRegressRef(importwizard->refVector(),*(importwizard->dataVector()[i]->dateTime()),refIntervalSpinBox->value());
-	       if (fVerbose>2)
-	       {
-		  cout<<"x="<<*(importwizard->dataVector()[i]->x())<<", y="<<*(importwizard->dataVector()[i]->y())<<", val-ref="<<z<<endl;
-	       }
-	    }
+    if (!importwizard->dataVector().size()) return;
+    if (fVerbose>1) std::cout<<"*** plot2d()"<<std::endl;
+    QVector<QPoint3F> data;
+    if (importwizard->refVector().size() && refRadioButton->isChecked())
+    {
+        data.reserve(importwizard->refVector().size());
+        for (int i=0; i<importwizard->refVector().size(); i++) {
+            if (importwizard->refVector()[i]->x() && importwizard->refVector()[i]->y() && importwizard->refVector()[i]->z()) {
+                double z=*(importwizard->refVector()[i]->z());
+                data.push_back(QPoint3F(*(importwizard->refVector()[i]->x()), *(importwizard->refVector()[i]->y()), z));
+            }
+        }
+    } else {
+        data.reserve(importwizard->dataVector().size());
+        for (int i=0; i<importwizard->dataVector().size(); i++) {
+            // file>>dp.Ra>>dp.Dec>>dp.Value>>dummy>>dummy>>dummy>>dummy;
+            if (importwizard->dataVector()[i]->x() && importwizard->dataVector()[i]->y() && importwizard->dataVector()[i]->z()) {
+                double z { 0 };
+                if (!importwizard->refVector().size() || valueRadioButton->isChecked()) {
+                    z=*(importwizard->dataVector()[i]->z());
+                } else if (importwizard->refVector().size() && diffRadioButton->isChecked() && importwizard->dataVector()[i]->dateTime()) {
+                    z=*(importwizard->dataVector()[i]->z());
+                    z-=getlinRegressRef(importwizard->refVector(),*(importwizard->dataVector()[i]->dateTime()),refIntervalSpinBox->value());
+                    if (fVerbose>2) {
+                        cout<<"x="<<*(importwizard->dataVector()[i]->x())<<", y="<<*(importwizard->dataVector()[i]->y())<<", val-ref="<<z<<endl;
+                    }
+                }
 
-	    data.push_back(QPoint3F(*(importwizard->dataVector()[i]->x()), *(importwizard->dataVector()[i]->y()), z));
-	 }
-      }
-   }
-   // fill and open 2d-map window
-   mapwindow->setData(data);
-   mapwindow->show();
+                data.push_back(QPoint3F(*(importwizard->dataVector()[i]->x()), *(importwizard->dataVector()[i]->y()), z));
+            }
+        }
+    }
+    // fill and open 2d-map window
+    mapwindow->setData(data);
+    mapwindow->show();
 }

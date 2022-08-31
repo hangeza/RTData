@@ -27,8 +27,8 @@ class QPoint3F : public QPointF
    public:
       QPoint3F()
          : QPointF(0.,0.),fz(0.) {}
-      QPoint3F(double x, double y, double z)
-         : QPointF(x,y),fz(z)  {}
+      QPoint3F(double a_x, double a_y, double a_z)
+         : QPointF(a_x,a_y),fz(a_z)  {}
       void setZ(qreal Z) { fz=Z; }
       qreal z() const { return fz; }
       

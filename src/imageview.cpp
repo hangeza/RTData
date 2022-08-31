@@ -23,13 +23,10 @@
 #include <QMessageBox>
 #include <QMenuBar>
 #include <QGridLayout>
-#include "imageview.h"
 
-ImageView::ImageView(QWidget * parent)
+ImageView::ImageView([[maybe_unused]] QWidget * parent)
 {
-//   setCentralWidget(new QWidget);
-//   centralWidget()->setVisible(false);
-   fImage = NULL;
+   fImage = nullptr;
    this->setMinimumWidth ( 200 );
    this->setMinimumHeight ( 200 );
        
@@ -53,11 +50,11 @@ ImageView::~ ImageView()
    if (fImage) delete fImage;
 }
 
-void ImageView::closeEvent(QCloseEvent * event)
+void ImageView::closeEvent([[maybe_unused]] QCloseEvent * event)
 {
 }
 
-void ImageView::paintEvent(QPaintEvent * event)
+void ImageView::paintEvent([[maybe_unused]] QPaintEvent * event)
 {
    if (!fImage) return;
    if (fVerbose>1) std::cout<<"*** ImageView::paintEvent(QPaintEvent *)"<<std::endl;
@@ -178,8 +175,7 @@ void ImageView::createStatusBar()
 void ImageView::draw()
 {
    this->setUpdatesEnabled(false);
-   double Offset,Range;
-   
+
    double max=-1e+38;
    double min=1e+38;
    for (int i=0; i < fArray.rows(); i++)

@@ -16,6 +16,8 @@
  ***************************************************************************/
 
 #include <QtGui>
+#include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QDialogButtonBox>
 #include <QGridLayout>
 #include <QLabel>
@@ -83,6 +85,31 @@ void MultiIntInputDialog::updateValues(int value)
 void MultiIntInputDialog::setLabelText(int i, const QString & text)
 {
    if (i<fNrBoxes) fLabels[i]->setText(text);
+}
+
+int MultiIntInputDialog::value(int i) const
+{
+    return fSpinBoxes[i]->value();
+}
+
+int MultiIntInputDialog::maximum(int i) const
+{
+    return fSpinBoxes[i]->maximum();
+}
+
+int MultiIntInputDialog::minimum(int i) const
+{
+    return fSpinBoxes[i]->minimum();
+}
+
+void MultiIntInputDialog::setMaximum(int i, int value)
+{
+    fSpinBoxes[i]->setMaximum(value);
+}
+
+void MultiIntInputDialog::setMinimum(int i, int value)
+{
+    fSpinBoxes[i]->setMinimum(value);
 }
 
 void MultiIntInputDialog::setMaximum(int value)
@@ -177,6 +204,31 @@ void MultiDoubleInputDialog::updateValues(double value)
 void MultiDoubleInputDialog::setLabelText(int i, const QString & text)
 {
    if (i<fNrBoxes) fLabels[i]->setText(text);
+}
+
+double MultiDoubleInputDialog::value(int i) const
+{
+    return fValues[i];
+}
+
+double MultiDoubleInputDialog::maximum(int i) const
+{
+    return fSpinBoxes[i]->maximum();
+}
+
+double MultiDoubleInputDialog::minimum(int i) const
+{
+    return fSpinBoxes[i]->minimum();
+}
+
+void MultiDoubleInputDialog::setMaximum(int i, double value)
+{
+    fSpinBoxes[i]->setMaximum(value);
+}
+
+void MultiDoubleInputDialog::setMinimum(int i, double value)
+{
+    fSpinBoxes[i]->setMinimum(value);
 }
 
 void MultiDoubleInputDialog::setMaximum(double value)

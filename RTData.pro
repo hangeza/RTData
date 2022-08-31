@@ -10,8 +10,6 @@ CONFIG += c++17
 
 SOURCES += \
     src/Array.cpp \
-    src/basic.cpp \
-    src/func.cpp \
     src/imageview.cpp \
     src/importwizard_impl.cpp \
     src/main.cpp \
@@ -22,9 +20,6 @@ SOURCES += \
 
 HEADERS += \
     src/Array.h \
-    src/Array2D.h \
-    src/basic.h \
-    src/func.h \
     src/imageview.h \
     src/importwizard_impl.h \
     src/multidialog.h \

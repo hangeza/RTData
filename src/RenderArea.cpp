@@ -30,15 +30,8 @@
 #include <QGridLayout>
 #include "RenderArea.h"
 #include "multidialog.h"
-#include "func.h"
 
-
-
-#define XBINS 50
-#define YBINS 50
-
-
-static const int MAX_PIC_SIZE = 4000;
+constexpr std::size_t MAX_PIC_SIZE { 4000 };
 
 template < typename T >
 T sgn( T const &value )
@@ -49,7 +42,6 @@ T sgn( T const &value )
 }
 
 using namespace std;
-using namespace hgz;
 
 QRect getOverlap(const QRect& rect1, const QRect& rect2)
 {
@@ -123,30 +115,10 @@ bool RenderArea::event(QEvent * event)
 
    if (event->type() == PaintLineEventType) {
       PaintLineEvent *myEvent = static_cast<PaintLineEvent *>(event);
-//      QPainter painter(this);
-      double yscale = (double)this->height() / (double)fPixmap.height();
-      double y1 = yscale * (double)myEvent->getLine();
-//      double y2 = yscale * (double)(myEvent->getLine());
-
-//      std::cout<<"y1 = "<<y1<<", y2="<<y2<<std::endl;
-
-//      QRect rect(0,(int)(y1),this->width(),0);
-//      painter.drawPixmap(rect,*fPixmap,rect);
-
       QRect rect(0,myEvent->getLine(),fPixmap.width(),1);
-//      this->repaint(rect);
       this->update(rect);
-//      this->update();
-//      this->repaint();
-
-//      std::cout<<" PaintLineEvent called."<<std::endl;
-      // custom event handling here
-
       return true;
    } else if (event->type() == QEvent::MouseMove) {
-//      std::cout<<" MouseMoveEvent called."<<std::endl;
-//      emit(mouseMove((QMouseEvent*)event));
-     
    }
    return QWidget::event(event);
 }
@@ -271,18 +243,13 @@ void WaterFallWidget::mouseMoveEvent(QMouseEvent * event)
  * overloaded widget paint event handler
  * @param event paint event
  */
-void WaterFallWidget::paintEvent(QPaintEvent * event)
+void WaterFallWidget::paintEvent([[maybe_unused]] QPaintEvent * event)
 {
-//   return;
-
    QRect srcRect;
    QRect targetRect;
 
    QPainter painter(this);
-//   int _actWidth = std::min(this->width(),fWidth);
    int _actWidth = 0;
-//   if (fQueue.size()) _actWidth = std::min(this->width(),fQueue.last().size());
-//   else _actWidth = this->width();
    if (fData.size()) _actWidth = std::min(this->width(),fData.size());
    else _actWidth = this->width();
    // aktuelles Teilbild
@@ -306,9 +273,6 @@ void WaterFallWidget::paintEvent(QPaintEvent * event)
    targetRect = QRect(0,(fImages.size()-2)*fPicHeight+fLineCounter+1,_actWidth,fPicHeight-fLineCounter);
    if (targetRect.top() >= this->height()) return;
    painter.drawImage(targetRect,fImages[actPic],srcRect);
-
-//   QRect rect = getOverlap(event->rect(),fPixmap.rect());
-//   painter.drawPixmap(rect,fPixmap,rect);
 }
 
 /**
@@ -497,7 +461,7 @@ DiagramWidget::DiagramWidget(QWidget * parent)
    fConnectPoints=true;
    fMenuBar=NULL;
    fContextMenuEnabled=true;
-   pFunction.reset(NULL);
+   //pFunction.reset(NULL);
    fShowFunction = false;
 
    fVerbose=0;
@@ -632,7 +596,7 @@ void DiagramWidget::setData(const QVector< QPointF > & data)
  * custom paint event handler
  * @param event
  */
-void DiagramWidget::paintEvent(QPaintEvent * event)
+void DiagramWidget::paintEvent([[maybe_unused]] QPaintEvent * event)
 {
    int ystart=0;
    QPainter painter(this);
@@ -644,7 +608,7 @@ void DiagramWidget::paintEvent(QPaintEvent * event)
  * custom resize event handler
  * @param event
  */
-void DiagramWidget::resizeEvent(QResizeEvent * event)
+void DiagramWidget::resizeEvent([[maybe_unused]] QResizeEvent * event)
 {
    int w=this->width();
    int h=this->height();
@@ -899,38 +863,7 @@ void DiagramWidget::draw()
                }
             }
          }
-         if (pFunction.get()!=NULL) {
-            // draw function
-            painter.setPen(QPen(fFnColor, 1.));
-            if (fDirectXMapping) {
-
-               if (fHasXValues) {
-               } else {
-
-               }
-            } else {
-               if (fHasXValues) {
-                  for (double t=fBounds.left(); t<fBounds.right(); t+=fBounds.width()/1000.) {
-                     int x=fPixmap.width()*(t-fBounds.left())/(fBounds.width());
-                     int y=fPixmap.height()*(1.-((*pFunction)(t)-fBounds.top())/(fBounds.height()));
-
-                     //if (i==0) { path.moveTo(x,y); continue; }
-                     if (x>=0 && x<fPixmap.width() && y>=0 && y<fPixmap.height())
-                     {
-                        /*
-                        painter.setPen(Qt::black);
-                        painter.drawPoint(x,y);
-                        painter.setPen(fPen);
-                        */
-                        //path.lineTo(x,y);
-                        painter.drawPoint(x,y);
-                     }
-                  }
-               } else {
-
-               }
-            }
-         }
+         
          painter.end();
          if ((fGridX || fGridY) && fMask.rect() == fPixmap.rect()) {
          //createMask();
@@ -1329,14 +1262,6 @@ void DiagramWidget::saveImage()
    filter=0;
 }
 
-void DiagramWidget::setFunction(const hgz::Function<double,double>& func)
-{
-   pFunction.reset(new hgz::Function<double,double>(func));
-}
-
-
-
-
 
 // Histo2dWidget
 /**
@@ -1438,11 +1363,9 @@ Histo2dWidget::~Histo2dWidget()
    if (fBoundsDialog) delete fBoundsDialog;
 }
 
-void Histo2dWidget::paintEvent(QPaintEvent * event)
+void Histo2dWidget::paintEvent([[maybe_unused]] QPaintEvent * event)
 {
-   //if (!fData.size()) return;
    QPainter painter(this);
-   int w=this->width();
    int h=this->height();
    if (this->parent()==NULL) h-=fMenuBar->height()+fStatusBar->height();
    int ystart=0;
@@ -1453,26 +1376,18 @@ void Histo2dWidget::paintEvent(QPaintEvent * event)
    if (fShowPalette) painter.drawPixmap(this->width()-fPaletteWidth,ystart,fPaletteWidth,h,fPalettePixmap);
 }
 
-void Histo2dWidget::resizeEvent(QResizeEvent * event)
+void Histo2dWidget::resizeEvent([[maybe_unused]] QResizeEvent * event)
 {
-   //return;
-   //   fPixmap.fill(Qt::black);
    fPaletteWidth = max(this->width()/20, 20);
    int w=this->width() - (fShowPalette ? fPaletteWidth : 0);
    int h=this->height();
    if (fMenuBar) h-=fMenuBar->height()+fStatusBar->height();
-//   fPixmap = QPixmap(w,h);
    if (fInterpolateBins) fPixmap = fHisto->interpolateBins(fInterpolateIterations).getPixmap(fHistPalette,fHistGradation,fHistInvert).scaled(w,h);
    else fPixmap = fHisto->getPixmap(fHistPalette,fHistGradation,fHistInvert).scaled(w,h);
 
-//   fPixmap.fill(Qt::black);
-
-//   if (fMask) { delete fMask; fMask = NULL; }
    fMask = QBitmap(w,h);
-//   fMask.fill(Qt::color1);
    if (fVerbose) std::cout<<" created mask: w="<<fMask.width()<<" h="<<fMask.height()<<std::endl;
    if (fGridX || fGridY) { createMask(); /*fPixmap.setMask(fMask);*/ }
-   //if (fShowPalette) drawPalette();
    draw();
 }
 
@@ -1592,7 +1507,7 @@ void Histo2dWidget::setBounds(const QRectF & rect)
  * set number of bins on x-axis
  * @param bins number of bins
  */
-void Histo2dWidget::setBinsX(int bins)
+void Histo2dWidget::setBinsX(std::size_t bins)
 {
    fXBins=bins;
    setBounds(fBounds);
@@ -1602,7 +1517,7 @@ void Histo2dWidget::setBinsX(int bins)
  * set number of bins on y-axis
  * @param bins number of bins
  */
-void Histo2dWidget::setBinsY(int bins)
+void Histo2dWidget::setBinsY(std::size_t bins)
 {
    fYBins=bins;
    setBounds(fBounds);
@@ -1613,7 +1528,7 @@ void Histo2dWidget::setBinsY(int bins)
  * @param xbins number of bins in x-direction
  * @param ybins number of bins in y-direction
  */
-void Histo2dWidget::setBins(int xbins, int ybins)
+void Histo2dWidget::setBins(std::size_t xbins, std::size_t ybins)
 {
    fXBins=xbins;
    fYBins=ybins;
@@ -1753,7 +1668,7 @@ void Histo2dWidget::setBins(const QVector<int> & bins)
    setBounds(fBounds);
 }
 
-void Histo2dWidget::closeEvent(QCloseEvent * event)
+void Histo2dWidget::closeEvent([[maybe_unused]] QCloseEvent * event)
 {
    fBinningDialog->close();
    fBoundsDialog->close();

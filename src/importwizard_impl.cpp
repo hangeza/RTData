@@ -29,7 +29,7 @@
 
 #include "importwizard_impl.h"
 
-const int TIMEOUT = 20000;
+constexpr std::size_t TIMEOUT { 20000UL };
 
 using namespace std;
 

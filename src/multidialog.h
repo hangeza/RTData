@@ -19,10 +19,10 @@
 #define DUALDIALOG_H
 
 #include <QDialog>
-#include <QSpinBox>
 
 class QDialogButtonBox;
-//class QSpinBox;
+class QSpinBox;
+class QDoubleSpinBox;
 class QLabel;
 class QGridLayout;
 
@@ -34,15 +34,15 @@ Q_OBJECT
       MultiIntInputDialog(QWidget* parent=0, int nrInputs=1);
       ~MultiIntInputDialog();
 
-      int value(int i) const { return fSpinBoxes[i]->value(); }
-      int maximum(int i) const { return fSpinBoxes[i]->maximum(); }
-      int minimum(int i) const { return fSpinBoxes[i]->minimum(); }
+      int value(int i) const;
+      int maximum(int i) const;
+      int minimum(int i) const;
    public slots:
       void setLabelText(int i, const QString& text);
       void setValue(int i, int value);
       void setValues(QVector<int> values);
-      void setMaximum(int i, int value) { fSpinBoxes[i]->setMaximum(value); }
-      void setMinimum(int i, int value) { fSpinBoxes[i]->setMinimum(value); }
+      void setMaximum(int i, int value);
+      void setMinimum(int i, int value);
       void setMaximum(int value);
       void setMinimum(int value);
    signals:
@@ -63,16 +63,15 @@ Q_OBJECT
       MultiDoubleInputDialog(QWidget* parent=0, int nrInputs=1);
       ~MultiDoubleInputDialog();
 
-//      double value(int i) const { return fSpinBoxes[i]->value(); }
-      double value(int i) const { return fValues[i]; }
-      double maximum(int i) const { return fSpinBoxes[i]->maximum(); }
-      double minimum(int i) const { return fSpinBoxes[i]->minimum(); }
+      double value(int i) const;
+      double maximum(int i) const;
+      double minimum(int i) const;
    public slots:
       void setLabelText(int i, const QString& text);
       void setValue(int i, double value);
       void setValues(QVector<double> values);
-      void setMaximum(int i, double value) { fSpinBoxes[i]->setMaximum(value); }
-      void setMinimum(int i, double value) { fSpinBoxes[i]->setMinimum(value); }
+      void setMaximum(int i, double value);
+      void setMinimum(int i, double value);
       void setMaximum(double value);
       void setMinimum(double value);
    signals:

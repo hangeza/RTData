@@ -25,7 +25,6 @@
 #include <QQueue>
 #include <QList>
 #include <QVector>
-#include <QScrollBar>
 #include <QPen>
 #include <QBitmap>
 
@@ -33,7 +32,6 @@
 
 #include "QHistogram.h"
 #include "QPoint3.h"
-#include "func.h"
 
 template class QVector<float>;
 class QPaintEvent;
@@ -42,18 +40,15 @@ class QBitmap;
 class QDialog;
 class MultiIntInputDialog;
 class MultiDoubleInputDialog;
-//class QHist2d;
 class QMenuBar;
 class QMenu;
 class QAction;
 class QActionGroup;
 class QStatusBar;
 class QLayout;
-//template class hgz::Function<double,double>;
-//class QPen;
 
 const QEvent::Type PaintLineEventType = (QEvent::Type)10001;
-//const QEvent::Type PaintLineEventType = (QEvent::Type)10001;
+
 QRect getOverlap(const QRect& rect1, const QRect& rect2);
 
 class PaintLineEvent : public QEvent
@@ -66,11 +61,6 @@ class PaintLineEvent : public QEvent
    private:
       int fLine;
 };
-
-
-
-
-
 
 /**
  * @class RenderArea
@@ -124,7 +114,6 @@ class DiagramWidget : public RenderArea
       ~DiagramWidget() {}
       QRectF bounds() { return fBounds; }
       bool directXMapping() const { return fDirectXMapping; }
-//      QPen pen() const { return fPen; }
       QColor bgColor() const { return fBgColor; }
       QColor fgColor() const { return fFgColor; }
       QColor fnColor() const { return fFnColor; }
@@ -134,7 +123,6 @@ class DiagramWidget : public RenderArea
       bool labels() const { return fLabels; }
       void enableContextMenu(bool enable) { fContextMenuEnabled = enable; }
       bool contextMenuEnabled() { return fContextMenuEnabled; }
-      hgz::Function<double,double>& function() { return *pFunction; }
       void inhibitAutoscale(bool inhibit=true);
 
    signals:
@@ -158,7 +146,6 @@ class DiagramWidget : public RenderArea
          setBounds(bounds[0],bounds[1],bounds[2],bounds[3]);
       }
       void setDirectXMapping ( bool value = true ) { fDirectXMapping = value; createMask(); }
-//      void setPen ( const QPen& value ) { fPen = value; }
       void setBgColor(const QColor& bgColor) { fBgColor = bgColor; }
       void setFgColor(const QColor& fgColor) { fFgColor = fgColor; }
       void setFnColor(const QColor& fnColor) { fFnColor = fnColor; }
@@ -177,8 +164,6 @@ class DiagramWidget : public RenderArea
       void saveImage(const QString& filename);
       void saveImage();
 
-      void setFunction(const hgz::Function<double,double>& func);
-
    protected:
       void paintEvent( QPaintEvent *event );
       void resizeEvent( QResizeEvent *event );
@@ -187,14 +172,11 @@ class DiagramWidget : public RenderArea
    private:
       QVector<QPointF> fPointValues;
       QVector<double> fSingleValues;
-      //QVector<int> fOldData;
       QRectF fBounds;
-//      bool fFitX;
       bool fGridX;
       bool fGridY;
       bool fLabels;
       QBitmap fMask;
-//      QPen fPen;
       QColor fBgColor;
       QColor fFgColor;
       QColor fFnColor;
@@ -207,8 +189,6 @@ class DiagramWidget : public RenderArea
       bool fAutoScale;
       bool fContextMenuEnabled;
       bool fShowFunction;
-      /// pointer to user function
-      std::unique_ptr<hgz::Function<double,double> > pFunction;
       MultiDoubleInputDialog* fBoundsDialog;
       QStatusBar* fStatusBar;
       QMenuBar* fMenuBar;
@@ -228,7 +208,6 @@ class DiagramWidget : public RenderArea
       QAction *fnColAct;
       QAction *pointSizeAct;
       QAction *aboutQtAct;
-
 
       void createActions();
       void createMenus();
@@ -301,131 +280,130 @@ class WaterFallWidget : public RenderArea
  */
 class Histo2dWidget : public RenderArea
 {
-   Q_OBJECT
-   public:
-      Histo2dWidget(QWidget* parent=NULL, int xbins=50, int ybins=50);
-      ~Histo2dWidget();
-      QRectF bounds() const { return fBounds; }
-      int binsX() const { return fXBins; }
-      int binsY() const { return fYBins; }
-//      QPen Pen() const { return fPen; }
-      QColor bgColor() const { return fBgColor; }
-      bool gridX() const { return fGridX; }
-      bool gridY() const { return fGridY; }
-      void fill(double x, double y, double value);
-   public slots:
-      void setData(const QVector<QPoint3F>& data);
-      void setBinsX(int bins);
-      void setBinsY(int bins);
-      void setBins(int xbins, int ybins);
-      void setBins(const QVector<int>& bins);
-      void setXMin(double xmin);
-      void setXMax(double xmax);
-      void setYMin(double ymin);
-      void setYMax(double ymax);
-      void setBounds(const QRectF& rect);
-      void setBounds(double xmin, double xmax, double ymin, double ymax) {
-         setBounds(QRectF(xmin,ymin,xmax-xmin,ymax-ymin));
-      }
-      void setBounds(const QVector<double>& bounds) {
-         setBounds(bounds[0],bounds[1],bounds[2],bounds[3]);
-      }
-//      void setPen ( const QPen& value ) { fPen = value; }
-      void setBgColor(const QColor& bgColor) { fBgColor = bgColor; }
-      void setGridX ( bool value ){ fGridX = value; createMask(); }
-      void setGridY ( bool value ){ fGridY = value; createMask(); }
-      void autoscale(bool autoscale);
-      void clear();
-      void saveImage(const QString& filename);
-      void saveImage();
-      void exportData();
-      void chooseBgColor();
-      void chooseGridColor();
-   private slots:
-      void setPalette();
-      void setGradation();
-      void invertPalette(bool);
-      void interpolateBins(bool);
-      void chooseInterpolIterations();
-      void showPalette(bool showPalette=true);
-      void showGrid(bool showPalette=true);
-      void fillHisto();
+Q_OBJECT
+public:
+    Histo2dWidget(QWidget* parent=NULL, int xbins = DEFAULT_X_BINS, int ybins = DEFAULT_Y_BINS);
+    ~Histo2dWidget();
+    QRectF bounds() const { return fBounds; }
+    std::size_t binsX() const { return fXBins; }
+    std::size_t binsY() const { return fYBins; }
+    QColor bgColor() const { return fBgColor; }
+    bool gridX() const { return fGridX; }
+    bool gridY() const { return fGridY; }
+    void fill(double x, double y, double value);
+public slots:
+    void setData(const QVector<QPoint3F>& data);
+    void setBinsX(std::size_t bins);
+    void setBinsY(std::size_t bins);
+    void setBins(std::size_t xbins, std::size_t ybins);
+    void setBins(const QVector<int>& bins);
+    void setXMin(double xmin);
+    void setXMax(double xmax);
+    void setYMin(double ymin);
+    void setYMax(double ymax);
+    void setBounds(const QRectF& rect);
+    void setBounds(double xmin, double xmax, double ymin, double ymax) {
+        setBounds(QRectF(xmin,ymin,xmax-xmin,ymax-ymin));
+    }
+    void setBounds(const QVector<double>& bounds) {
+        setBounds(bounds[0],bounds[1],bounds[2],bounds[3]);
+    }
+    void setBgColor(const QColor& bgColor) { fBgColor = bgColor; }
+    void setGridX ( bool value ){ fGridX = value; createMask(); }
+    void setGridY ( bool value ){ fGridY = value; createMask(); }
+    void autoscale(bool autoscale);
+    void clear();
+    void saveImage(const QString& filename);
+    void saveImage();
+    void exportData();
+    void chooseBgColor();
+    void chooseGridColor();
+private slots:
+    void setPalette();
+    void setGradation();
+    void invertPalette(bool);
+    void interpolateBins(bool);
+    void chooseInterpolIterations();
+    void showPalette(bool showPalette=true);
+    void showGrid(bool showPalette=true);
+    void fillHisto();
 
-   protected:
-      void closeEvent( QCloseEvent *event );
-      void paintEvent( QPaintEvent *event );
-      void resizeEvent( QResizeEvent *event );
-      void contextMenuEvent( QContextMenuEvent *event);
-      void mouseMoveEvent(QMouseEvent * event);
-   private:
-      QHist2d* fHisto;
-      int fXBins, fYBins;
-      QVector<QPoint3F> fData;
-      QRectF fBounds;
-      bool fGridX;
-      bool fGridY;
-      bool fLabels;
-      int fNrXTicks,fNrYTicks;
-      QBitmap fMask;
-      QPixmap fPalettePixmap;
-      int fPaletteWidth;
-//      QPen fPen;
-      QColor fBgColor;
-      QColor fGridColor;
-      bool fAutoScale;
-      bool fInterpolateBins;
-      int fInterpolateIterations;
-      bool fShowPalette;
-      bool fShowGrid;
-      QHist2d::HISTO_PALETTE fHistPalette;
-      QHist2d::HISTO_GRADATION fHistGradation;
-      bool fHistInvert;
-      MultiIntInputDialog* fBinningDialog;
-      MultiDoubleInputDialog* fBoundsDialog;
-      QMenuBar* fMenuBar;
-      QStatusBar* fStatusBar;
-      QMenu *contextMenu;
-      QMenu *fileMenu;
-      QMenu *editMenu;
-      QMenu *helpMenu;
-      QAction *saveAct;
-      QAction *exportAct;
-      QAction *autoscaleAct;
-      QAction *exitAct;
-      QAction *binningAct;
-      QAction *boundaryAct;
-      QAction *aboutAct;
-      QAction *aboutQtAct;
-      QAction *greyscaleAct;
-      QAction *colorAct;
-      QAction *monochrome1Act;
-      QAction *monochrome2Act;
-      QAction *monochrome3Act;
-      QAction *monochrome4Act;
-      QAction *monochrome5Act;
-      QAction *linearAct;
-      QAction *logAct;
-      QAction *invertAct;
-      QAction *bgColAct;
-      QAction *gridColAct;
-      QAction *interpolAct;
-      QAction *interpolIterationsAct;
-      QAction *showPaletteAct;
-      QAction *showGridAct;
-      QActionGroup *paletteGroup;
-      QActionGroup *gradationGroup;
+protected:
+    void closeEvent( QCloseEvent *event );
+    void paintEvent( QPaintEvent *event );
+    void resizeEvent( QResizeEvent *event );
+    void contextMenuEvent( QContextMenuEvent *event);
+    void mouseMoveEvent(QMouseEvent * event);
+private:
+    static constexpr std::size_t DEFAULT_X_BINS { 50 };
+    static constexpr std::size_t DEFAULT_Y_BINS { 50 };
 
-      void createActions();
-      void createMenus();
-      void createStatusBar();
-      void draw();
-      void drawPalette();
-      void createMask();
-      double bcdExtend(double number);
-      double bcdReduce(double number);
-      void adjustBounds();
+    QHist2d* fHisto;
+    std::size_t fXBins { DEFAULT_X_BINS };
+    std::size_t fYBins { DEFAULT_Y_BINS };
+    QVector<QPoint3F> fData;
+    QRectF fBounds;
+    bool fGridX;
+    bool fGridY;
+    bool fLabels;
+    int fNrXTicks,fNrYTicks;
+    QBitmap fMask;
+    QPixmap fPalettePixmap;
+    int fPaletteWidth;
+    QColor fBgColor;
+    QColor fGridColor;
+    bool fAutoScale;
+    bool fInterpolateBins;
+    int fInterpolateIterations;
+    bool fShowPalette;
+    bool fShowGrid;
+    QHist2d::HISTO_PALETTE fHistPalette;
+    QHist2d::HISTO_GRADATION fHistGradation;
+    bool fHistInvert;
+    MultiIntInputDialog* fBinningDialog;
+    MultiDoubleInputDialog* fBoundsDialog;
+    QMenuBar* fMenuBar;
+    QStatusBar* fStatusBar;
+    QMenu *contextMenu;
+    QMenu *fileMenu;
+    QMenu *editMenu;
+    QMenu *helpMenu;
+    QAction *saveAct;
+    QAction *exportAct;
+    QAction *autoscaleAct;
+    QAction *exitAct;
+    QAction *binningAct;
+    QAction *boundaryAct;
+    QAction *aboutAct;
+    QAction *aboutQtAct;
+    QAction *greyscaleAct;
+    QAction *colorAct;
+    QAction *monochrome1Act;
+    QAction *monochrome2Act;
+    QAction *monochrome3Act;
+    QAction *monochrome4Act;
+    QAction *monochrome5Act;
+    QAction *linearAct;
+    QAction *logAct;
+    QAction *invertAct;
+    QAction *bgColAct;
+    QAction *gridColAct;
+    QAction *interpolAct;
+    QAction *interpolIterationsAct;
+    QAction *showPaletteAct;
+    QAction *showGridAct;
+    QActionGroup *paletteGroup;
+    QActionGroup *gradationGroup;
+
+    void createActions();
+    void createMenus();
+    void createStatusBar();
+    void draw();
+    void drawPalette();
+    void createMask();
+    double bcdExtend(double number);
+    double bcdReduce(double number);
+    void adjustBounds();
 };
-
-
 
 #endif // RENDERAREA_H
