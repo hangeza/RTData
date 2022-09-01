@@ -114,7 +114,7 @@ private:
       QTimer* fTimer;
 
       QString fSeperator;
-      int fFirstRow;
+      std::size_t fFirstRow { 1 };
       int fDateTimeIndex;
       QString fDateTimePattern;
       int fXIndex;

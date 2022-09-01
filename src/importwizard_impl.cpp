@@ -30,6 +30,7 @@
 #include "importwizard_impl.h"
 
 constexpr std::size_t TIMEOUT { 20000UL };
+constexpr std::size_t MAX_LINE_LENGTH { 500U };
 
 using namespace std;
 
@@ -132,10 +133,10 @@ void ImportWizard::readRawData()
 
    char c;
 
-   int actRow=0;
-   for (int actRow=0; actRow<fFirstRow-1; actRow++) {
-      char str[500];
-      fFile.getline(str,500);
+   std::size_t actRow { 0 };
+   for (std::size_t actRow=0; actRow < fFirstRow-1; actRow++) {
+      char str[MAX_LINE_LENGTH];
+      fFile.getline(str,MAX_LINE_LENGTH);
    }
 
    do
@@ -143,8 +144,8 @@ void ImportWizard::readRawData()
       fFile>>c;
       if (c=='#')
       {
-         char str[500];
-         fFile.getline(str,500);
+         char str[MAX_LINE_LENGTH];
+         fFile.getline(str,MAX_LINE_LENGTH);
 //         length--;
 //         std::cout<<c<<std::endl;
       }
@@ -156,8 +157,8 @@ void ImportWizard::readRawData()
 
    while (!fFile.eof())
    {
-      char str[500];
-      fFile.getline(str,500);
+      char str[MAX_LINE_LENGTH];
+      fFile.getline(str,MAX_LINE_LENGTH);
       QString line(str);
       if (line.size()<3) continue;
       line.remove(QString("\n"));
@@ -221,7 +222,7 @@ void ImportWizard::readRawData()
 //   fFile.close();
 }
 
-void ImportWizard::validateMapping(int dummy)
+void ImportWizard::validateMapping([[maybe_unused]] int dummy)
 {
    if (!this->isVisible()) return;
    if (dateTimeComboBox->currentIndex() || xComboBox->currentIndex() || yComboBox->currentIndex()) {
@@ -367,12 +368,12 @@ QMap< int, int > ImportWizard::getColStat(const QString & filename)
       return colstat;
    }
 
-   char c;
+   char c { 0 };
 
-   int actRow=0;
-   for (int actRow=0; actRow<fFirstRow-1; actRow++) {
-      char str[500];
-      fFile.getline(str,500);
+   std::size_t actRow { 0 };
+   for (std::size_t actRow { 0 }; actRow < fFirstRow - 1; actRow++) {
+      char str[MAX_LINE_LENGTH];
+      fFile.getline(str,MAX_LINE_LENGTH);
    }
 
    do
@@ -380,19 +381,16 @@ QMap< int, int > ImportWizard::getColStat(const QString & filename)
       fFile>>c;
       if (c=='#')
       {
-         char str[500];
-         fFile.getline(str,500);
-//         length--;
-//         std::cout<<c<<std::endl;
+         char str[MAX_LINE_LENGTH];
+         fFile.getline(str,MAX_LINE_LENGTH);
       }
       else fFile.putback(c);
    } while (c=='#');
 
-   int maxcols=0;
    while (!fFile.eof())
    {
-      char str[500];
-      fFile.getline(str,500);
+      char str[MAX_LINE_LENGTH];
+      fFile.getline(str,MAX_LINE_LENGTH);
       QString line(str);
       if (line.size()<3) continue;
       line.remove(QString("\n"));
