@@ -19,17 +19,10 @@
 #define _ARRAY_H
 
 
-//#include <complex>
 #include <valarray>
 #include <vector>
 #include <deque>
-//#include <errno.h>
-//#include <stdio.h>
-//#include <cstdlib>
 #include <typeinfo>
-//#include <climits>
-//#include <algorithm>
-//#include <functional>
 #include <numeric>
 #include <iterator>
 #include <cassert>

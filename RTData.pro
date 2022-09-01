@@ -10,7 +10,6 @@ CONFIG += c++17
 
 SOURCES += \
     src/Array.cpp \
-    src/imageview.cpp \
     src/importwizard_impl.cpp \
     src/main.cpp \
     src/multidialog.cpp \
@@ -20,7 +19,6 @@ SOURCES += \
 
 HEADERS += \
     src/Array.h \
-    src/imageview.h \
     src/importwizard_impl.h \
     src/multidialog.h \
     src/QHistogram.h \
